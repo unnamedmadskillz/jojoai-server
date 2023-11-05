@@ -38,20 +38,20 @@ type GptService struct {
 	repo   GptRepo
 }
 
-func NewGptService(g GptRepo) (*GptService, error) {
+func NewGptService(g GptRepo) *GptService {
 	cfg := &chatgpt.Config{
 		BaseURL: "https://neuroapi.host/v1",
 		APIKey:  "nothing",
 	}
 	client, err := chatgpt.NewClientWithConfig(cfg)
 	if err != nil {
-		return nil, err
+		log.Fatal("can't create gpt client")
 	}
 	svc := &GptService{
 		client: client,
 		repo:   g,
 	}
-	return svc, err
+	return svc
 }
 
 func (g *GptService) gptGetResponse(ctx context.Context, msg string) (*chatgpt.ChatResponse, error) {
