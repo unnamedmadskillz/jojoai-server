@@ -13,6 +13,7 @@ type Server struct {
 	router   *fiber.App
 	endpoint *endpoint.Endpoint
 	gpt      *service.GptService
+	tts      *service.TTSService
 }
 
 func NewServer() (*Server, error) {
@@ -20,10 +21,11 @@ func NewServer() (*Server, error) {
 	s := &Server{}
 	s.router = fiber.New()
 	s.gpt, err = service.NewGptService(repository.NewGptRepo(mongoclient.Database("core")))
+	s.tts = service.NewTTSService(*s.gpt, repository.NewTTSRepo(mongoclient.Database("core")))
 	if err != nil {
 		return nil, err
 	}
-	s.endpoint = endpoint.NewEndpoint(s.gpt)
+	s.endpoint = endpoint.NewEndpoint(s.gpt, s.tts)
 	s.router.Get("/get", s.endpoint.CreateChat)
 	return s, nil
 }

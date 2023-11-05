@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"test-gpt/internal/model"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,17 +10,26 @@ import (
 )
 
 type GptRepo struct {
-	db *mongo.Collection
+	db *mongo.Database
 }
 
 func NewGptRepo(db *mongo.Database) *GptRepo {
-	return &GptRepo{db: db.Collection("suggested")}
+	return &GptRepo{db: db}
 }
 
-func (gr *GptRepo) GetAndThrow() model.Suggested {
-	var m *model.Suggested
+func (gr *GptRepo) GetSuggestedAndThrow() model.Suggested {
+	var m model.Suggested
 	ctx := context.Background()
-	result := gr.db.FindOneAndDelete(ctx, bson.M{"theme": "Окуясу бросил курить", "weight": "5"})
+	result := gr.db.Collection(collectionSuggested).FindOneAndDelete(ctx, bson.M{"theme": "Окуясу бросил курить", "weight": "5"})
 	result.Decode(&m)
-	return *m
+	return m
+}
+
+func (gr *GptRepo) PutCompletedDialogue(d *model.ReplicDB) (*mongo.InsertOneResult, error) {
+	ctx := context.Background()
+	result, err := gr.db.Collection(collectionCreated).InsertOne(ctx, d)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert dialogue, result: %v, %v", result, err)
+	}
+	return result, nil
 }

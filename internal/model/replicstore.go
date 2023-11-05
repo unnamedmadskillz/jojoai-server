@@ -1,5 +1,11 @@
 package model
 
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type ReplicRow struct {
 	Name  string `bson:"model_name"`
 	Text  string `bson:"tts_text"`
@@ -8,5 +14,7 @@ type ReplicRow struct {
 }
 
 type ReplicDB struct {
-	Data []ReplicRow `bson:"data"`
+	ID        primitive.ObjectID `bson:"_id"`
+	Data      []ReplicRow        `bson:"data"`
+	CreatedAt time.Time          `bson:"created_at"`
 }
