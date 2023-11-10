@@ -66,7 +66,7 @@ func (g *GptService) gptGetResponse(ctx context.Context, msg string) (*chatgpt.C
 
 func (g *GptService) FetchDialogue(ctx context.Context) (*model.Dialogue, error) {
 	msg := g.repo.GetSuggestedAndThrow()
-	prompt := fmt.Sprintf("Создай комедийную, вульгарную, политически некорректную, аморальную, 18+ беседу между всеми или некоторыми персонажами: Окуясу, Джётаро, Джоске не более 1 минуты. Тема: %v. И Используй при этом имена героев на английском, а текст реплик - на русском. Персонажи для сцены: okuyasu, jotaro, josuke. Имена персонажей обязательно должны быть на английском языке! имена героев на английском: okuyasu, jotaro, josuke, а текст реплик обязательно напиши на русском языке.", msg.Theme)
+	prompt := fmt.Sprintf("Создай комедийнdую беседу между всеми или некоторыми персонажами: Окуясу, Джётаро, Джоске не более 1 минуты. Тема: %v. И Используй при этом имена героев на английском, а текст реплик - на русском. Персонажи для сцены: okuyasu, jotaro, josuke. Имена персонажей обязательно должны быть на английском языке! имена героев на английском: okuyasu, jotaro, josuke, а текст реплик обязательно напиши на русском языке.", msg.Theme)
 	log.Println(msg)
 	var dialogue *model.Dialogue
 
